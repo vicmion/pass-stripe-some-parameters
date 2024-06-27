@@ -128,7 +128,7 @@ export default {
             displayHourDrop: false,
             dropoffDateLabel: null,
             dropoffHourLabel: null,
-            API_URL: "https://u0fgu8solc.execute-api.us-east-1.amazonaws.com/prod",
+            API_URL: "https://4qbmw3dl47.execute-api.us-east-1.amazonaws.com/Prod",
             today: null,
             pickOffLimit: null,
             loading: false
