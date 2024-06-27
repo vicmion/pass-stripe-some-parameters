@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SuccessView from '../views/SuccessView.vue'
 import CancelledView from '../views/CancelledView.vue'
@@ -18,19 +18,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/success.html',
+    path: '/',
     name: 'success',
+    alias: '/success',
     component: SuccessView
   },
   {
-    path: '/cancel.html',
+    path: '/',
     name: 'cancel',
+    alias: '/cancel',
     component: CancelledView
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 
