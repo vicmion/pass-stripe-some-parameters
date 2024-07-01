@@ -6,14 +6,19 @@
                 dark
                 size="40"
                 @click="prevDays"
+                :class="{ 'disabled-icon': !showPrevDaysButton }"
+                :disabled="!showPrevDaysButton"
             >
                 mdi-chevron-left
             </v-icon>
             <div class="dates">
                 <div
-                    v-for="day in days"
+                    v-for="day in days.slice(daysOffset*3, daysOffset*3+3)"
                     v-bind:key="day.id"
-                    class="date"
+                    :class="{
+                        'date': true,
+                        'highlighted': day['id'] === pickedDateId
+                    }"
                     @click="selectDate(day)"
                 >
                     <span class="month">{{ day['month'] }}</span>
@@ -24,6 +29,8 @@
                 dark
                 size="40"
                 @click="nextDays"
+                :class="{ 'disabled-icon': !showNextDaysButton }"
+                :disabled="!showNextDaysButton"
             >
                 mdi-chevron-right
             </v-icon>
@@ -80,16 +87,15 @@ export default {
   },
   data () {
     return {
-        moment: null,
         days: [],
         hours: [],
         hoursOffset: 0,
-        pickedHourId: null
+        daysOffset: 5,
+        pickedHourId: null,
+        pickedDateId: null
     }
   },
   mounted () {
-    this.moment = DateTime.now()
-
     this.days = this.createDaysOptions(this.moment)
     
     this.hours = this.createHoursOptions()
@@ -100,6 +106,12 @@ export default {
     },
     showPrevHoursButton () {
         return this.hoursOffset > 0
+    },
+    showNextDaysButton () {
+        return (this.daysOffset * 3 + 3)< this.days.length
+    },
+    showPrevDaysButton () {
+        return this.daysOffset > 0
     }
   },
   methods: {
@@ -121,24 +133,21 @@ export default {
 
         return hours
     },
-    createDaysOptions (current) {
-        return [
-            {
-                id: 1,
-                day: current.minus({days:1}).day,
-                month: current.minus({days:1}).toLocaleString({ month: 'long' })
-            },
-            {
-                id: 2,
-                day: current.day,
-                month: current.toLocaleString({ month: 'long' })
-            },
-            {
-                id: 3,
-                day: current.plus({days:1}).day,
-                month: current.plus({days:1}).toLocaleString({ month: 'long' })
-            }
-        ]   
+    createDaysOptions () {
+        let options = []
+        const moment = DateTime.now()
+
+        let index = 0
+        for(let start = moment.minus({days: 15}); start < moment.plus({days: 15}); start = start.plus({days: 1})) {
+            options.push({
+                id: index,
+                day: start.minus({days:1}).day,
+                month: start.minus({days:1}).toLocaleString({ month: 'long' })
+            })
+            index += 1
+        }
+
+        return options
     },
     prevHours () {
         this.hoursOffset -= 1
@@ -147,12 +156,10 @@ export default {
         this.hoursOffset += 1
     },
     prevDays () {
-        this.moment = this.moment.minus({days:3})
-        this.days = this.createDaysOptions(this.moment)
+        this.daysOffset -= 1
     },
     nextDays () {
-        this.moment = this.moment.plus({days:3})
-        this.days = this.createDaysOptions(this.moment)
+        this.daysOffset += 1
     },
     selectHour (hour) {
         if (this.pickedHourId === hour.id)
@@ -161,7 +168,10 @@ export default {
             this.pickedHourId = hour.id
     },
     selectDate(d) {
-        console.log(d)
+        if (this.pickedDateId === d.id)
+            this.pickedDateId = null
+        else
+            this.pickedDateId = d.id
     }
   }
 }
