@@ -210,7 +210,6 @@ export default {
         }
     },
     select () {
-        console.log('picked')
         this.$emit('picked', this.mergedDate)
     }
   }

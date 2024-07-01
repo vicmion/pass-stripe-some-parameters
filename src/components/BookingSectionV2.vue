@@ -18,8 +18,14 @@
             ></v-select>
         </div>
         <div class="booking-section-row date-times">
-            <v-btn variant="outlined" @click="dialog=true">Select pickup time</v-btn>
-            <v-btn variant="outlined" @click="dialog=true">Select dropoff time</v-btn>
+            <v-btn variant="outlined" @click="pickupDatetimeDialog=true">
+                <span v-if="pickupDateTime">{{ pickupDateTimeFormatted }}</span>
+                <span v-else>Select pickup time</span>
+            </v-btn>
+            <v-btn variant="outlined" @click="dropoffDatetimeDialog=true">
+                <span v-if="dropoffDateTime">{{ dropoffDateTimeFormatted }}</span>
+                <span v-else>Select dropoff time</span>
+            </v-btn>
         </div>
         <div class="booking-section-row">
             <span>Numero di bagagli</span>
@@ -29,11 +35,19 @@
             Continua
         </v-btn>
         <DateTimeSelection
-            v-model="dialog"
+            v-model="pickupDatetimeDialog"
             startHour="08:00"
             endHour="20:00"
             :intervalMinutes="30"
-            @picked="dialog=false"
+            @picked="pickedDatetime"
+        >
+        </DateTimeSelection>
+        <DateTimeSelection
+            v-model="dropoffDatetimeDialog"
+            startHour="14:00"
+            endHour="20:00"
+            :intervalMinutes="30"
+            @picked="droppedDatetime"
         >
         </DateTimeSelection>
     </div>
@@ -41,7 +55,6 @@
 
 <script>
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
-import { DateTime } from 'luxon'
 import DateTimeSelection from './DateTimeSelection.vue'
 
 export default {
@@ -55,46 +68,13 @@ export default {
             locationOptions: ['Hotel 1', 'Hotel 2', 'Milano Stazione Centrale', 'Aeroporto Linate', 'Aeroporto Malpensa'],
             pickupLocation: null,
             dropoffLocation: null,
-            pickupDate: null,
-            pickupDateLabel: null,
-            pickupHour: null,
-            pickupHourLabel: null,
-            dropoffDate: null,
-            dropoffHour: null,
+            pickupDateTime: null,
+            dropoffDateTime: null,
             numberOfBags: 1,
-            displayDate: false,
-            displayHour: false,
-            displayDateDrop: false,
-            displayHourDrop: false,
-            dropoffDateLabel: null,
-            dropoffHourLabel: null,
             API_URL: "https://4qbmw3dl47.execute-api.us-east-1.amazonaws.com/Prod",
-            today: null,
-            pickOffLimit: null,
             loading: false,
-            dialog: false
-        }
-    },
-    mounted () {
-        this.today = DateTime.now().minus({days: 1}).toFormat('yyyy-MM-dd')
-    },
-    watch: {
-        pickupDate () {
-            this.pickupDateLabel = this.pickupDate.setLocale('it-IT').toLocaleString()
-            this.displayDate = false
-            this.pickOffLimit = this.pickupDate.minus({days: 1}).toFormat('yyyy-MM-dd')
-        },
-        pickupHour () {
-            this.pickupHourLabel = this.pickupHour.toLocaleString()
-            this.displayHour = false
-        },
-        dropoffDate () {
-            this.dropoffDateLabel = this.dropoffDate.setLocale('it-IT').toLocaleString()
-            this.displayDateDrop = false
-        },
-        dropoffHour () {
-            this.dropoffHourLabel = this.dropoffHour.toLocaleString()
-            this.displayHourDrop = false
+            pickupDatetimeDialog: false,
+            dropoffDatetimeDialog: false
         }
     },
     computed: {
@@ -115,6 +95,18 @@ export default {
                     return ['Milano Stazione Centrale', 'Aeroporto Linate', 'Aeroporto Malpensa']
                 else return ['Hotel 1', 'Hotel 2']
             }
+        },
+        pickupDateTimeFormatted () {
+            if(this.pickupDateTime)
+                return this.pickupDateTime.toLocaleString()
+            
+            return ''
+        },
+        dropoffDateTimeFormatted () {
+            if(this.dropoffDateTime)
+                return this.dropoffDateTime.toLocaleString()
+
+            return ''
         }
     },
     methods: {
@@ -136,33 +128,14 @@ export default {
                 this.loading = false
             })
         },
-        selectDate () {
-            this.displayHour = false
-            this.displayDate = true
-        },
-        selectTime () {
-            this.displayDate = false
-            this.displayHour = true
-        },
-        closeBoth () {
-            this.displayDate = false
-            this.displayHour = false
-        },
-        selectDateDrop () {
-            this.displayHourDrop = false
-            this.displayDateDrop = true
-        },
-        selectTimeDrop () {
-            this.displayDateDrop = false
-            this.displayHourDrop = true
-        },
-        closeBothDrop () {
-            this.displayDateDrop = false
-            this.displayHourDrop = false
-        },
-        allowedMinutes: v => v === 30 || v === 0,
-        allowedHours: v => v >= 8 && v <= 12,
-        allowedDropoffHours: v => v >= 14 && v <= 20
+        pickedDatetime (chosenDate) {
+            this.pickupDateTime = chosenDate
+            this.pickupDatetimeDialog = false
+        }, 
+        droppedDatetime (chosenDate) {
+            this.dropoffDateTime = chosenDate
+            this.dropoffDatetimeDialog = false
+        }
     }
 }
 </script>
