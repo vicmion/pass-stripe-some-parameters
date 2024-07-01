@@ -35,8 +35,8 @@
           </div>
         </v-col>
         <v-col no-gutters style="height: 100%;" lg="4" md="4" sm="12">
-          <BookingSectionV2>
-          </BookingSectionV2>
+          <BookingSection>
+          </BookingSection>
           <DateTimeSelection
             startHour="08:00"
             endHour="20:00"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import BookingSectionV2 from '@/components/BookingSectionV2.vue'
+import BookingSection from '@/components/BookingSection.vue'
 import DateTimeSelection from '@/components/DateTimeSelection'
 import { DateTime } from 'luxon'
 
@@ -57,7 +57,7 @@ export default {
   name: 'HomeView',
   components: {
     DateTimeSelection,
-    BookingSectionV2
+    BookingSection
   },
   mounted () {
     this.today = DateTime.now()
