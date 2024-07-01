@@ -35,23 +35,35 @@
           </div>
         </v-col>
         <v-col no-gutters style="height: 100%;" lg="4" md="4" sm="12">
-          <BookingSectionV2>
-          </BookingSectionV2>
+          <BookingSectionV3
+            startHour="08:00"
+            endHour="20:00"
+            :intervalMinutes="30"
+          >
+          </BookingSectionV3>
         </v-col>
       </v-row>
     </v-container>
 </template>
 
 <script>
-import BookingSectionV2 from '@/components/BookingSectionV2'
+// import BookingSectionV2 from '@/components/BookingSectionV2'
+import BookingSectionV3 from '@/components/BookingSectionV3'
+import { DateTime } from 'luxon'
 
 export default {
   name: 'HomeView',
   components: {
-    BookingSectionV2
+    // BookingSectionV2,
+    BookingSectionV3
+  },
+  mounted () {
+    this.today = DateTime.now()
   },
   data () {
     return {
+      today: DateTime,
+      todayStr: String,
       API_URL: "https://u0fgu8solc.execute-api.us-east-1.amazonaws.com/prod"
     }
   },

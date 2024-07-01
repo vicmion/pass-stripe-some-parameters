@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@date-io/luxon": "^3.0.0",
+    "@fortawesome/fontawesome-free": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@mdi/font": "^7.4.47",
     "@varlet/ui": "^3.2.14",
     "axios": "^1.7.2",
     "balm-ui": "^10.29.0",

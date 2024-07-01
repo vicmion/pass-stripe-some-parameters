@@ -179,7 +179,7 @@ export default {
     methods: {
         checkout () {
             this.loading = true
-            this.axios.post(this.API_URL + '/checkout', {
+            this.axios.post(this.API_URL + '/create-order', {
                 pickupLocation: this.pickupLocation,
                 dropoffLocation: this.dropoffLocation,
                 pickupDate: this.pickupDate,

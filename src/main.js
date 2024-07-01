@@ -10,10 +10,19 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import LuxonAdapter from "@date-io/luxon"
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import '@mdi/font/css/materialdesignicons.css'
 
-// const date = createDate()
+const icons = {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    }
+  }
 
 const vuetify = createVuetify({
+    icons,
     components,
     directives,
     date: {
@@ -21,7 +30,7 @@ const vuetify = createVuetify({
         locale: {
             it: 'it-IT',
         }
-    }
+    },
 })
 
 const app = createApp(App)
