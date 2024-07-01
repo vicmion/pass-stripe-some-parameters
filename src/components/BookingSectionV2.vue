@@ -17,77 +17,9 @@
                 :clearable="true"
             ></v-select>
         </div>
-        <div class="booking-section-row date-time-section">
-            <p>Data e ora di ritiro</p>
-            <div class="button-section">
-                <div class="btn-box">
-                    <v-btn :disabled="displayDate" @click="selectDate" color="primary">
-                        {{ pickupDateLabel === null ? 'Seleziona data' : pickupDateLabel }}
-                    </v-btn>
-                </div>
-                <div class="btn-box">
-                    <v-btn :disabled="displayHour" @click="selectTime" color="primary">
-                        {{ pickupHourLabel === null ? 'Seleziona ora' : pickupHourLabel }}
-                    </v-btn>
-                </div>
-            </div>
-            <div class="selection-section">
-                <v-date-picker v-if="displayDate" v-model="pickupDate" :min="today"></v-date-picker>
-                <v-time-picker
-                    color="green-lighten-1"
-                    v-if="displayHour"
-                    v-model="pickupHour"
-                    format="24h"
-                    :allowed-minutes="allowedMinutes"
-                    :allowed-hours="allowedHours"
-                >
-                </v-time-picker>
-                <v-btn
-                    v-if="displayHour || displayDate"
-                    @click="closeBoth"
-                    color="secondary"
-                    icon="mdi-plus"
-                    style="margin-left: 20px;"
-                >
-                X
-                </v-btn>
-            </div>
-        </div>
-        <div class="booking-section-row date-time-section">
-            <p>Data e ora di riconsegna</p>
-            <div class="button-section">
-                <div class="btn-box">
-                    <v-btn :disabled="displayDateDrop" @click="selectDateDrop" color="primary">
-                        {{ dropoffDateLabel === null ? 'Seleziona data' : dropoffDateLabel }}
-                    </v-btn>
-                </div>
-                <div class="btn-box">
-                    <v-btn :disabled="displayHourDrop" @click="selectTimeDrop" color="primary">
-                        {{ dropoffHourLabel === null ? 'Seleziona ora' : dropoffHourLabel }}
-                    </v-btn>
-                </div>
-            </div>
-            <div class="selection-section">
-                <v-date-picker v-if="displayDateDrop" v-model="dropoffDate" :min="pickOffLimit"></v-date-picker>
-                <v-time-picker
-                    color="green-lighten-1"
-                    v-if="displayHourDrop"
-                    v-model="dropoffHour"
-                    format="24h"
-                    :allowed-minutes="allowedMinutes"
-                    :allowed-hours="allowedDropoffHours"
-                >
-                </v-time-picker>
-                <v-btn
-                    v-if="displayHourDrop || displayDateDrop"
-                    @click="closeBothDrop"
-                    color="secondary"
-                    icon="mdi-plus"
-                    style="margin-left: 20px;"
-                >
-                X
-                </v-btn>
-            </div>
+        <div class="booking-section-row date-times">
+            <v-btn variant="outlined">Select pickup time</v-btn>
+            <v-btn variant="outlined">Select dropoff time</v-btn>
         </div>
         <div class="booking-section-row">
             <span>Numero di bagagli</span>
@@ -100,14 +32,12 @@
 </template>
 
 <script>
-import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import { DateTime } from 'luxon'
 
 export default {
     name: 'BookingSectionV2',
     components: {
-        VTimePicker,
         VNumberInput
     },    
     data () {
@@ -246,6 +176,12 @@ h3 {
 .booking-section .booking-section-row {
     width: 100%;
     margin-bottom: 20px;
+}
+
+.booking-section .date-times {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .booking-section .date-time-section {

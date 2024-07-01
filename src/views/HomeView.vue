@@ -35,27 +35,29 @@
           </div>
         </v-col>
         <v-col no-gutters style="height: 100%;" lg="4" md="4" sm="12">
-          <BookingSectionV3
+          <BookingSectionV2>
+          </BookingSectionV2>
+          <DateTimeSelection
             startHour="08:00"
             endHour="20:00"
             :intervalMinutes="30"
           >
-          </BookingSectionV3>
+          </DateTimeSelection>
         </v-col>
       </v-row>
     </v-container>
 </template>
 
 <script>
-// import BookingSectionV2 from '@/components/BookingSectionV2'
-import BookingSectionV3 from '@/components/BookingSectionV3'
+import BookingSectionV2 from '@/components/BookingSectionV2.vue'
+import DateTimeSelection from '@/components/DateTimeSelection'
 import { DateTime } from 'luxon'
 
 export default {
   name: 'HomeView',
   components: {
-    // BookingSectionV2,
-    BookingSectionV3
+    DateTimeSelection,
+    BookingSectionV2
   },
   mounted () {
     this.today = DateTime.now()

@@ -21,7 +21,7 @@
                     }"
                     @click="selectDate(day)"
                 >
-                    <span class="month">{{ day['month'] }}</span>
+                    <span class="month">{{ day['monthLocale'] }}</span>
                     <span class="day">{{  day['day'] }}</span>
                 </div>
             </div>
@@ -70,6 +70,16 @@
                 mdi-chevron-right
             </v-icon>
         </div>
+        <div class="confirm-section">
+            <v-btn
+                variant="outlined"
+                :disabled="!(pickedHourId !== null && pickedDateId != null)"
+                @click="select"
+            >
+                <span v-if="!(pickedHourId !== null && pickedDateId != null)">Select</span>
+                <span v-else>{{ mergedDate }}</span>
+            </v-btn>
+        </div>
     </div>
 </template>
 
@@ -77,7 +87,7 @@
 import { DateTime } from 'luxon'
 
 export default {
-  name: 'BookingSectionV3',
+  name: 'DateTimeSelection',
   components: {
   },
   props: {
@@ -90,9 +100,12 @@ export default {
         days: [],
         hours: [],
         hoursOffset: 0,
-        daysOffset: 5,
+        daysOffset: 0,
         pickedHourId: null,
-        pickedDateId: null
+        pickedDateId: null,
+        pickedHour: null,
+        pickedDate: null,
+        choosenDate: null
     }
   },
   mounted () {
@@ -112,6 +125,21 @@ export default {
     },
     showPrevDaysButton () {
         return this.daysOffset > 0
+    },
+    mergedDate () {
+        let dt = DateTime.now()
+
+        const timeComponents = {
+            hour: this.pickedHour.hour,
+            minute: this.pickedHour.minute,
+            day: this.pickedDate.day,
+            month: this.pickedDate.month,
+            year: this.pickedDate.year,
+        }
+
+        const mergedDateTime = dt.set(timeComponents)
+
+        return mergedDateTime.toLocaleString(DateTime.DATETIME_SHORT)
     }
   },
   methods: {
@@ -138,11 +166,13 @@ export default {
         const moment = DateTime.now()
 
         let index = 0
-        for(let start = moment.minus({days: 15}); start < moment.plus({days: 15}); start = start.plus({days: 1})) {
+        for(let start = DateTime.now(); start < moment.plus({days: 14}); start = start.plus({days: 1})) {
             options.push({
                 id: index,
-                day: start.minus({days:1}).day,
-                month: start.minus({days:1}).toLocaleString({ month: 'long' })
+                day: start.day,
+                month: start.month,
+                year: start.year,
+                monthLocale: start.toLocaleString({ month: 'long' })
             })
             index += 1
         }
@@ -164,14 +194,21 @@ export default {
     selectHour (hour) {
         if (this.pickedHourId === hour.id)
             this.pickedHourId = null
-        else
+        else {
             this.pickedHourId = hour.id
+            this.pickedHour = DateTime.fromFormat(hour['description'], 'HH:mm')
+        }
     },
     selectDate(d) {
         if (this.pickedDateId === d.id)
             this.pickedDateId = null
-        else
+        else {
             this.pickedDateId = d.id
+            this.pickedDate = DateTime.fromObject({days: d['day'], month: d['month'], year: d['year']})
+        }
+    },
+    select () {
+        this.$emit('picked', this.mergedDate)
     }
   }
 }
@@ -279,5 +316,14 @@ export default {
 .highlighted {
     background-color: #304E48;
     color: white;
+}
+
+.confirm-section {
+    height: 100px;
+    display: flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    flex-direction: column;
+    justify-content: center;
 }
 </style>
