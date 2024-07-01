@@ -1,86 +1,88 @@
 <template>
-    <div class="booking-section-v3">
-        <span class="title">Pick the hour</span>
-        <div class="date-section">
-            <v-icon
-                dark
-                size="40"
-                @click="prevDays"
-                :class="{ 'disabled-icon': !showPrevDaysButton }"
-                :disabled="!showPrevDaysButton"
-            >
-                mdi-chevron-left
-            </v-icon>
-            <div class="dates">
-                <div
-                    v-for="day in days.slice(daysOffset*3, daysOffset*3+3)"
-                    v-bind:key="day.id"
-                    :class="{
-                        'date': true,
-                        'highlighted': day['id'] === pickedDateId
-                    }"
-                    @click="selectDate(day)"
-                >
-                    <span class="month">{{ day['monthLocale'] }}</span>
-                    <span class="day">{{  day['day'] }}</span>
+    <v-dialog width="auto" max-width="600">
+        <div class="booking-section-v3">
+            <span class="title">Pick the hour</span>
+                <div class="date-section">
+                    <v-icon
+                        dark
+                        size="40"
+                        @click="prevDays"
+                        :class="{ 'disabled-icon': !showPrevDaysButton }"
+                        :disabled="!showPrevDaysButton"
+                    >
+                        mdi-chevron-left
+                    </v-icon>
+                    <div class="dates">
+                        <div
+                            v-for="day in days.slice(daysOffset*3, daysOffset*3+3)"
+                            v-bind:key="day.id"
+                            :class="{
+                                'date': true,
+                                'highlighted': day['id'] === pickedDateId
+                            }"
+                            @click="selectDate(day)"
+                        >
+                            <span class="month">{{ day['monthLocale'] }}</span>
+                            <span class="day">{{  day['day'] }}</span>
+                        </div>
+                    </div>
+                    <v-icon
+                        dark
+                        size="40"
+                        @click="nextDays"
+                        :class="{ 'disabled-icon': !showNextDaysButton }"
+                        :disabled="!showNextDaysButton"
+                    >
+                        mdi-chevron-right
+                    </v-icon>
                 </div>
-            </div>
-            <v-icon
-                dark
-                size="40"
-                @click="nextDays"
-                :class="{ 'disabled-icon': !showNextDaysButton }"
-                :disabled="!showNextDaysButton"
-            >
-                mdi-chevron-right
-            </v-icon>
-        </div>
-        <div class="hour-section">
-            <v-icon
-                dark
-                size="40"
-                @click="prevHours"
-                :class="{ 'disabled-icon': !showPrevHoursButton }"
-                :disabled="!showPrevHoursButton"
-            >
-                mdi-chevron-left
-            </v-icon>
-            <div class="hours-grid">
-                <div
-                    v-for="hour in hours.slice(hoursOffset*9, (hoursOffset*9)+9)"
-                    :key="hour.id"
-                    :class="{
-                        'hour': true,
-                        'highlighted': hour['id'] === pickedHourId
-                    }"
-                    @click="selectHour(hour)"
-                >
-                    {{ hour['description'] }}
+                <div class="hour-section">
+                    <v-icon
+                        dark
+                        size="40"
+                        @click="prevHours"
+                        :class="{ 'disabled-icon': !showPrevHoursButton }"
+                        :disabled="!showPrevHoursButton"
+                    >
+                        mdi-chevron-left
+                    </v-icon>
+                    <div class="hours-grid">
+                        <div
+                            v-for="hour in hours.slice(hoursOffset*9, (hoursOffset*9)+9)"
+                            :key="hour.id"
+                            :class="{
+                                'hour': true,
+                                'highlighted': hour['id'] === pickedHourId
+                            }"
+                            @click="selectHour(hour)"
+                        >
+                            {{ hour['description'] }}
+                        </div>
+                    </div>
+                    <v-icon
+                        dark
+                        size="40"
+                        @click="nextHours"
+                        :class="{
+                            'disabled-icon': !showNextHoursButton
+                        }"
+                        :disabled="!showNextHoursButton"
+                    >
+                        mdi-chevron-right
+                    </v-icon>
                 </div>
-            </div>
-            <v-icon
-                dark
-                size="40"
-                @click="nextHours"
-                :class="{
-                    'disabled-icon': !showNextHoursButton
-                }"
-                :disabled="!showNextHoursButton"
-            >
-                mdi-chevron-right
-            </v-icon>
+                <div class="confirm-section">
+                    <v-btn
+                        variant="outlined"
+                        :disabled="!(pickedHourId !== null && pickedDateId != null)"
+                        @click="select"
+                    >
+                        <span v-if="!(pickedHourId !== null && pickedDateId != null)">Select</span>
+                        <span v-else>{{ mergedDate }}</span>
+                    </v-btn>
+                </div>
         </div>
-        <div class="confirm-section">
-            <v-btn
-                variant="outlined"
-                :disabled="!(pickedHourId !== null && pickedDateId != null)"
-                @click="select"
-            >
-                <span v-if="!(pickedHourId !== null && pickedDateId != null)">Select</span>
-                <span v-else>{{ mergedDate }}</span>
-            </v-btn>
-        </div>
-    </div>
+    </v-dialog>
 </template>
 
 <script>
@@ -208,6 +210,7 @@ export default {
         }
     },
     select () {
+        console.log('picked')
         this.$emit('picked', this.mergedDate)
     }
   }
@@ -217,7 +220,7 @@ export default {
 <style scoped>
 .booking-section-v3 {
     width: 300px;
-    height: 300px;
+    height: 400px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -254,6 +257,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .date:hover {

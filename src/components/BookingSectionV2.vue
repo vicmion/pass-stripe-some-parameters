@@ -18,8 +18,8 @@
             ></v-select>
         </div>
         <div class="booking-section-row date-times">
-            <v-btn variant="outlined">Select pickup time</v-btn>
-            <v-btn variant="outlined">Select dropoff time</v-btn>
+            <v-btn variant="outlined" @click="dialog=true">Select pickup time</v-btn>
+            <v-btn variant="outlined" @click="dialog=true">Select dropoff time</v-btn>
         </div>
         <div class="booking-section-row">
             <span>Numero di bagagli</span>
@@ -28,17 +28,27 @@
         <v-btn @click="checkout" elevation="2" text color="primary" :loading="loading">
             Continua
         </v-btn>
+        <DateTimeSelection
+            v-model="dialog"
+            startHour="08:00"
+            endHour="20:00"
+            :intervalMinutes="30"
+            @picked="dialog=false"
+        >
+        </DateTimeSelection>
     </div>
 </template>
 
 <script>
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import { DateTime } from 'luxon'
+import DateTimeSelection from './DateTimeSelection.vue'
 
 export default {
     name: 'BookingSectionV2',
     components: {
-        VNumberInput
+        VNumberInput,
+        DateTimeSelection
     },    
     data () {
         return {
@@ -61,7 +71,8 @@ export default {
             API_URL: "https://4qbmw3dl47.execute-api.us-east-1.amazonaws.com/Prod",
             today: null,
             pickOffLimit: null,
-            loading: false
+            loading: false,
+            dialog: false
         }
     },
     mounted () {

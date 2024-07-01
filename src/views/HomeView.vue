@@ -66,7 +66,8 @@ export default {
     return {
       today: DateTime,
       todayStr: String,
-      API_URL: "https://u0fgu8solc.execute-api.us-east-1.amazonaws.com/prod"
+      API_URL: "https://u0fgu8solc.execute-api.us-east-1.amazonaws.com/prod",
+      dialog: false
     }
   },
   computed: {
