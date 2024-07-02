@@ -78,7 +78,7 @@
                         @click="select"
                     >
                         <span v-if="!(pickedHourId !== null && pickedDateId != null)">Select</span>
-                        <span v-else>{{ mergedDate }}</span>
+                        <span v-else>{{ mergedDateLocaleString }}</span>
                     </v-btn>
                 </div>
         </div>
@@ -129,6 +129,21 @@ export default {
         return this.daysOffset > 0
     },
     mergedDate () {
+        let dt = DateTime.now()
+
+        const timeComponents = {
+            hour: this.pickedHour.hour,
+            minute: this.pickedHour.minute,
+            day: this.pickedDate.day,
+            month: this.pickedDate.month,
+            year: this.pickedDate.year,
+        }
+
+        const mergedDateTime = dt.set(timeComponents)
+
+        return mergedDateTime
+    },
+    mergedDateLocaleString () {
         let dt = DateTime.now()
 
         const timeComponents = {

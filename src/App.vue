@@ -19,11 +19,24 @@
       </div>
     </v-app-bar>
 
-    <v-main id="main">
+    <v-main>
       <router-view/>
     </v-main>
+
+    <FooterSection></FooterSection>
   </v-layout>
 </template>
+
+<script>
+import FooterSection from '@/components/FooterSection'
+
+export default {
+  name: 'App',
+  components: {
+    FooterSection
+  }
+}
+</script>
 
 <style>
 html {
@@ -44,10 +57,6 @@ body {
   height: 100%;
 }
 
-#main {
-  height: 100%;
-}
-
 nav {
   padding: 30px;
 }
@@ -59,5 +68,9 @@ nav {
 
 #logo-img {
   width: 70px;
+}
+
+#footer {
+  min-height: 100px;
 }
 </style>

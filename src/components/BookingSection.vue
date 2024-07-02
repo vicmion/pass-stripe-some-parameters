@@ -71,7 +71,6 @@ export default {
             pickupDateTime: null,
             dropoffDateTime: null,
             numberOfBags: 1,
-            API_URL: "https://4qbmw3dl47.execute-api.us-east-1.amazonaws.com/Prod",
             loading: false,
             pickupDatetimeDialog: false,
             dropoffDatetimeDialog: false
@@ -111,15 +110,15 @@ export default {
     },
     methods: {
         checkout () {
+            console.log('this.pickupDateTime: ', this.pickupDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"))
+            console.log('this.dropoffDateTime: ', this.dropoffDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"))
             this.loading = true
-            this.axios.post(this.API_URL + '/create-order', {
+            this.axios.post(process.env.VUE_APP_API_URL + '/create-order', {
                 pickupLocation: this.pickupLocation,
                 dropoffLocation: this.dropoffLocation,
-                pickupDate: this.pickupDate,
-                pickupHour: this.pickupHour,
-                dropoffDate: this.dropoffDate,
-                dropoffHour: this.dropoffHour,
                 numberOfBags: 1,
+                pickupTimestamp: this.pickupDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"),
+                dropoffTimestamp: this.dropoffDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'")
             }).then((response) => {
                 console.log(response.data.Location)
                 window.location.href = response.data.Location

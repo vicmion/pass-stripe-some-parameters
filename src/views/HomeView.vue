@@ -1,7 +1,7 @@
 <template>
-    <v-container class="ma-0 pa-0" fluid style="height: 100%;">
-      <v-row no-gutters style="height: 100%;">
-        <v-col no-gutters style="height: 100%;" lg="8" md="8" sm="12">
+    <v-container class="ma-0 pa-0" fluid>
+      <v-row no-gutters>
+        <v-col no-gutters lg="8" md="8" sm="12">
           <div class="left-section">
             <div class="bg"></div>
             <v-container>
@@ -28,7 +28,7 @@
             </div>
           </div>
         </v-col>
-        <v-col no-gutters style="height: 100%;" lg="4" md="4" sm="12">
+        <v-col no-gutterslg="4" md="4" sm="12">
           <BookingSection>
           </BookingSection>
           <DateTimeSelection
@@ -43,31 +43,14 @@
 </template>
 
 <script>
-import BookingSection from '@/components/BookingSection.vue'
+import BookingSection from '@/components/BookingSection'
 import DateTimeSelection from '@/components/DateTimeSelection'
-import { DateTime } from 'luxon'
 
 export default {
   name: 'HomeView',
   components: {
     DateTimeSelection,
     BookingSection
-  },
-  mounted () {
-    this.today = DateTime.now()
-  },
-  data () {
-    return {
-      today: DateTime,
-      todayStr: String,
-      API_URL: "https://u0fgu8solc.execute-api.us-east-1.amazonaws.com/prod",
-      dialog: false
-    }
-  },
-  computed: {
-    checkoutSessionEndpoint: function () {
-      return `${this.API_URL}/checkout`
-    }
   }
 }
 </script>
