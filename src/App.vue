@@ -1,5 +1,24 @@
 <template>
   <v-layout id="app" theme="light">
+    <v-app-bar
+      id="app-bar"
+      :elevation="2"
+    >
+      <template v-slot:prepend>
+        <img id="logo-img" src="@/assets/logo.jpeg"/>
+      </template>
+      
+      <div class="actions-container">
+        <v-btn
+          variant="flat"
+          elevation="2"
+          color="primary"
+        >
+          Prenota
+        </v-btn>
+      </div>
+    </v-app-bar>
+
     <v-main id="main">
       <router-view/>
     </v-main>
@@ -33,12 +52,12 @@ nav {
   padding: 30px;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+#app-bar {
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+#logo-img {
+  width: 70px;
 }
 </style>

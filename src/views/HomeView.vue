@@ -6,12 +6,6 @@
             <div class="bg"></div>
             <v-container>
               <v-row>
-                <v-col cols="12" class="header">
-                  <img id="logo-img" src="@/assets/logo.jpeg"/>
-                  <h1>Baggy Sitter</h1>
-                </v-col>
-              </v-row>
-              <v-row>
                 <v-col cols="12" align="left">
                   <h2>Lightravel? Now, it's possible! With Baggysitter, you can just forget your luggages...</h2>
                 </v-col>
