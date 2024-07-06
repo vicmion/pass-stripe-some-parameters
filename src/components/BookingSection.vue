@@ -1,21 +1,43 @@
 <template>
     <div class="booking-section">
-        <h3>Prenota</h3>
+        <h3>Book</h3>
         <div class="booking-section-row">
             <v-select
-                label="Luogo di ritiro"
+                label="Pickup location"
                 :items="pickupLocationOptions"
                 v-model="pickupLocation"
                 :clearable="true"
-            ></v-select>
+            ></v-select> 
         </div>
-        <div class="booking-section-row">
+        <div
+            v-if="pickupLocation == 'Other destination'"
+            class="booking-section-row"
+        >
+            <v-text-field
+                label="Other pickup location"
+                v-model="customPickupLocation"
+            >
+            </v-text-field>
+        </div>
+        <div
+            class="booking-section-row"
+        >
             <v-select
-                label="Luogo di riconsegna"
+                label="Dropoff location"
                 :items="dropoffLocationOptions"
                 v-model="dropoffLocation"
                 :clearable="true"
             ></v-select>
+        </div>
+        <div
+            v-if="dropoffLocation == 'Other destination'"
+            class="booking-section-row"
+        >
+            <v-text-field
+                label="Other dropoff location"
+                v-model="customDropoffLocation"
+            >
+            </v-text-field>
         </div>
         <div class="booking-section-row date-times">
             <v-btn variant="outlined" @click="pickupDatetimeDialog=true">
@@ -28,11 +50,38 @@
             </v-btn>
         </div>
         <div class="booking-section-row">
-            <span>Numero di bagagli</span>
-            <v-number-input control-variant="split" :min="0" :max="10" v-model="numberOfBags"></v-number-input>
+            <span>Number of bags</span>
+            <v-number-input control-variant="split" :min="0" :max="10" v-model="numberOfBags">
+            </v-number-input>
         </div>
-        <v-btn @click="checkout" elevation="2" text color="primary" :loading="loading">
-            Continua
+        <div class="booking-section-row">
+            <v-select
+                label="Nationality"
+                item-title="title"
+                item-value="code"
+                :items="countriesOptions"
+                v-model="nationality"
+                :clearable="true"
+            >
+            </v-select>
+        </div>
+        <v-btn
+            v-if="customDropoffLocation === null && customPickupLocation === null"
+            @click="checkout"
+            elevation="2"
+            text color="primary"
+            :loading="loading"
+        >
+            Proceeed
+        </v-btn>
+        <v-btn
+            v-else
+            @click="checkout"
+            elevation="2"
+            text color="primary"
+            :loading="loading"
+        >
+            Send request
         </v-btn>
         <DateTimeSelection
             v-model="pickupDatetimeDialog"
@@ -54,6 +103,7 @@
 </template>
 
 <script>
+import { allCountries } from 'country-region-data';
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 import DateTimeSelection from './DateTimeSelection.vue'
 
@@ -65,16 +115,28 @@ export default {
     },    
     data () {
         return {
-            locationOptions: ['Hotel 1', 'Hotel 2', 'Milano Stazione Centrale', 'Aeroporto Linate', 'Aeroporto Malpensa'],
+            locationOptions: ['Hotel NHow Milano', 'Domina Hotel Milano Fiera', 'Milan central station', 'Milan Linate airport', 'Milan Malpensa airport', 'Other destination'],
             pickupLocation: null,
+            customPickupLocation: null,
             dropoffLocation: null,
+            customDropoffLocation: null,
             pickupDateTime: null,
             dropoffDateTime: null,
             numberOfBags: 1,
             loading: false,
             pickupDatetimeDialog: false,
-            dropoffDatetimeDialog: false
+            dropoffDatetimeDialog: false,
+            nationality: null,
+            countriesOptions: []
         }
+    },
+    mounted () {
+        this.countriesOptions = allCountries.map((item) => {
+            return {
+                title: item[0],
+                code: item[1]
+            }
+        })
     },
     computed: {
         pickupLocationOptions () {
