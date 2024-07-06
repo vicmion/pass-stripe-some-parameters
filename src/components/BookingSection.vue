@@ -211,7 +211,8 @@ export default {
                 largeBags: this.largeBags,
                 outOfFormatBags: this.outOfFormatBags,
                 pickupTimestamp: this.pickupDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"),
-                dropoffTimestamp: this.dropoffDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'")
+                dropoffTimestamp: this.dropoffDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"),
+                nationality: this.nationality
             }).then((response) => {
                 console.log(response.data.Location)
                 window.location.href = response.data.Location
