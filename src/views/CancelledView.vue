@@ -1,8 +1,8 @@
 <template>
   <div class="about">
-    <h1>Pagamento non andato a buon fine</h1>
+    <h1>Payment was not successfull</h1>
       <v-btn color="primary" @click="goToHome">
-        Torna alla home
+        Back to home
       </v-btn>
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
 
 <style scoped>
 .about {
+  text-align: center;
   margin-top: 50px;
 }
 

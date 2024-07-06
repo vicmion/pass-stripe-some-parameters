@@ -27,6 +27,10 @@ export default {
 </script>
 
 <style>
+#footer {
+  max-height: 100px;
+}
+
 .footer-section {
   margin-left: 50px;
   margin-bottom: 10px;

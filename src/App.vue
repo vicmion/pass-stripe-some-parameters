@@ -23,7 +23,9 @@
       <router-view/>
     </v-main>
 
-    <FooterSection></FooterSection>
+    <FooterSection
+    >
+    </FooterSection>
   </v-layout>
 </template>
 
@@ -53,8 +55,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 nav {
