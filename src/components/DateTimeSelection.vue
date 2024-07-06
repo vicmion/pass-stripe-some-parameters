@@ -46,7 +46,7 @@
                     >
                         mdi-chevron-left
                     </v-icon>
-                    <div class="hours-grid">
+                    <div v-if="hours.length > 0" class="hours-grid">
                         <div
                             v-for="hour in hours.slice(hoursOffset*9, (hoursOffset*9)+9)"
                             :key="hour.id"
@@ -58,6 +58,9 @@
                         >
                             {{ hour['description'] }}
                         </div>
+                    </div>
+                    <div v-else>
+                        <p>No options</p>
                     </div>
                     <v-icon
                         dark
@@ -95,7 +98,8 @@ export default {
   props: {
     startHour: String,
     endHour: String,
-    intervalMinutes: Number
+    intervalMinutes: Number,
+    startDate: DateTime
   },
   data () {
     return {
@@ -111,9 +115,25 @@ export default {
     }
   },
   mounted () {
-    this.days = this.createDaysOptions(this.moment)
-    
-    this.hours = this.createHoursOptions()
+    this.days = this.createDaysOptions()
+  },
+  watch: {
+    startHour () {
+        this.days = this.createDaysOptions(this.moment)
+    },
+    endHour () {
+        this.days = this.createDaysOptions(this.moment)
+    },
+    startDate () {
+        this.days = this.createDaysOptions(this.moment)
+    },
+    intervalMinutes () {
+        this.days = this.createDaysOptions(this.moment)
+    },
+    pickedDateId () {
+        const day = this.days.find((item) => item.id === this.pickedDateId)
+        this.hours = day.hourOptions
+    }
   },
   computed: {
     showNextHoursButton () {
@@ -160,35 +180,68 @@ export default {
     }
   },
   methods: {
-    createHoursOptions () {
-        const hours = []
+    generateHourOptions (datetime) {
+        let hourOptions = []
 
-        let start = DateTime.fromFormat(this.startHour, 'HH:mm')
-        const end = DateTime.fromFormat(this.endHour, 'HH:mm')
+        let startBoundary = DateTime.fromObject(datetime.toObject()).set({
+            hour: Number(this.startHour.split(":")[0]),
+            minute: Number(this.startHour.split(":")[1])
+        })
+        let endBoundary = DateTime.fromObject(datetime.toObject()).set({
+            hour: Number(this.endHour.split(":")[0]),
+            minute: Number(this.endHour.split(":")[1])
+        })
+        
+        console.log("--------------------")
+        console.log('datetime: ', datetime.toISO())
 
+        let indexDateTime = DateTime.fromObject(datetime.toObject())
+        if(indexDateTime.minute > 0 && indexDateTime.minute < 30) {
+            console.log('changing minute')
+            indexDateTime = indexDateTime.set({minute: 30})
+        }
+        else if (indexDateTime.minute > 30 && indexDateTime.minute < 60) {
+            console.log('changing minute & hour')
+            indexDateTime = indexDateTime.plus({hour: 1})
+            indexDateTime = indexDateTime.set({minute: 0})
+        }
+        
+        console.log(startBoundary.toISO())
+        console.log(endBoundary.toISO())
+        console.log(indexDateTime.toISO())
+        console.log("--------------------\n\n")
+        
         let index = 0
-        while(start <= end) {
-            hours.push({
-                id: index,
-                description: start.toFormat('HH:mm')
-            })
+        for(; indexDateTime <= endBoundary; indexDateTime = indexDateTime.plus({minutes:this.intervalMinutes})) {
+            if(indexDateTime >= startBoundary) {
+                hourOptions.push({
+                    id: index,
+                    description: indexDateTime.toFormat('HH:mm')
+                })
+            }
             index += 1
-            start = start.plus({minutes:this.intervalMinutes})
         }
 
-        return hours
+        return hourOptions
     },
     createDaysOptions () {
         let options = []
-        const moment = DateTime.now()
+
+        let start = DateTime.now()
+        if(this.startDate && this.startDate > start)
+            start = this.startDate
+        
+        const startPlus15Days = start.plus({days: 2})
 
         let index = 0
-        for(let start = DateTime.now(); start < moment.plus({days: 14}); start = start.plus({days: 1})) {
+        for(; start < startPlus15Days; start = start.plus({days: 1}).set({hour: 0, minute: 1})) {
+            console.log('index: ', start.toISO())
             options.push({
                 id: index,
                 day: start.day,
                 month: start.month,
                 year: start.year,
+                hourOptions: this.generateHourOptions(start),
                 monthLocale: start.toLocaleString({ month: 'long' })
             })
             index += 1

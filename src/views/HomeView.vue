@@ -1,5 +1,5 @@
 <template>
-    <v-container class="ma-0 pa-0" fluid>
+    <v-container class="main-container ma-0 pa-0" fluid>
       <v-row no-gutters>
         <v-col no-gutters lg="8" md="8" sm="12">
           <div class="left-section">
@@ -56,6 +56,8 @@ export default {
 </script>
 
 <style scoped>
+.main-container {
+}
 
 #logo-img {
   width: 100px;

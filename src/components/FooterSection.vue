@@ -1,7 +1,7 @@
 <template>
     <v-footer
       id="footer"
-      app
+      absolute
     >
       <v-row no-gutters>
         <v-col cols="12">

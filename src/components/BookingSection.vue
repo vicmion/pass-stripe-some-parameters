@@ -44,14 +44,28 @@
                 <span v-if="pickupDateTime">{{ pickupDateTimeFormatted }}</span>
                 <span v-else>Select pickup time</span>
             </v-btn>
-            <v-btn variant="outlined" @click="dropoffDatetimeDialog=true">
+            <v-btn
+                :disabled="pickupDateTime === null"
+                variant="outlined"
+                @click="dropoffDatetimeDialog=true"
+            >
                 <span v-if="dropoffDateTime">{{ dropoffDateTimeFormatted }}</span>
                 <span v-else>Select dropoff time</span>
             </v-btn>
         </div>
         <div class="booking-section-row">
-            <span>Number of bags</span>
-            <v-number-input control-variant="split" :min="0" :max="10" v-model="numberOfBags">
+            <span>Small bags</span>
+            <v-number-input control-variant="split" :min="0" :max="10" v-model="smallBags">
+            </v-number-input>
+        </div>
+        <div class="booking-section-row">
+            <span>Large bags</span>
+            <v-number-input control-variant="split" :min="0" :max="10" v-model="largeBags">
+            </v-number-input>
+        </div>
+        <div class="booking-section-row">
+            <span>Out of format bags</span>
+            <v-number-input control-variant="split" :min="0" :max="10" v-model="outOfFormatBags">
             </v-number-input>
         </div>
         <div class="booking-section-row">
@@ -86,13 +100,14 @@
         <DateTimeSelection
             v-model="pickupDatetimeDialog"
             startHour="08:00"
-            endHour="20:00"
+            endHour="12:00"
             :intervalMinutes="30"
             @picked="pickedDatetime"
         >
         </DateTimeSelection>
         <DateTimeSelection
             v-model="dropoffDatetimeDialog"
+            :startDate="pickupDateTime"
             startHour="14:00"
             endHour="20:00"
             :intervalMinutes="30"
@@ -122,12 +137,16 @@ export default {
             customDropoffLocation: null,
             pickupDateTime: null,
             dropoffDateTime: null,
-            numberOfBags: 1,
+            smallBags: 0,
+            largeBags: 0,
+            outOfFormatBags: 0,
             loading: false,
             pickupDatetimeDialog: false,
             dropoffDatetimeDialog: false,
             nationality: null,
-            countriesOptions: []
+            countriesOptions: [],
+            dt_now: null,
+            dropoff_start_hour: '08:00'
         }
     },
     mounted () {
@@ -138,23 +157,33 @@ export default {
             }
         })
     },
+    watch: {
+        pickupLocation () {
+            if(this.pickupLocation !== 'Other destination')
+                this.customPickupLocation = null
+        },
+        dropoffLocation () {
+            if(this.dropoffLocation !== 'Other destination')
+                this.customDropoffLocation = null
+        }
+    },
     computed: {
         pickupLocationOptions () {
             if(this.dropoffLocation === null)
                 return this.locationOptions
             else {
-                if(this.dropoffLocation === 'Hotel 1' || this.dropoffLocation === 'Hotel 2')
-                    return ['Milano Stazione Centrale', 'Aeroporto Linate', 'Aeroporto Malpensa']
-                else return ['Hotel 1', 'Hotel 2']
+                if(this.dropoffLocation === 'Hotel NHow Milano' || this.dropoffLocation === 'Domina Hotel Milano Fiera')
+                    return ['Milan central station', 'Milan Linate airport', 'Milan Malpensa airport', 'Other destination']
+                else return ['Hotel NHow Milano', 'Domina Hotel Milano Fiera', 'Other destination']
             }
         },
         dropoffLocationOptions () {
             if(this.pickupLocation === null)
                 return this.locationOptions
             else {
-                if(this.pickupLocation === 'Hotel 1' || this.pickupLocation === 'Hotel 2')
-                    return ['Milano Stazione Centrale', 'Aeroporto Linate', 'Aeroporto Malpensa']
-                else return ['Hotel 1', 'Hotel 2']
+                if(this.pickupLocation === 'Hotel NHow Milano' || this.pickupLocation === 'Domina Hotel Milano Fiera')
+                    return ['Milan central station', 'Milan Linate airport', 'Milan Malpensa airport', 'Other destination']
+                else return ['Hotel NHow Milano', 'Domina Hotel Milano Fiera', 'Other destination']
             }
         },
         pickupDateTimeFormatted () {
@@ -178,7 +207,9 @@ export default {
             this.axios.post(process.env.VUE_APP_API_URL + '/create-order', {
                 pickupLocation: this.pickupLocation,
                 dropoffLocation: this.dropoffLocation,
-                numberOfBags: 1,
+                smallBags: this.smallBags,
+                largeBags: this.largeBags,
+                outOfFormatBags: this.outOfFormatBags,
                 pickupTimestamp: this.pickupDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'"),
                 dropoffTimestamp: this.dropoffDateTime.toFormat("yyyy-LL-dd'T'HH:mm'Z'")
             }).then((response) => {
@@ -221,6 +252,7 @@ h3 {
 .booking-section .booking-section-row {
     width: 100%;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .booking-section .date-times {

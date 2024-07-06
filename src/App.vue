@@ -9,17 +9,17 @@
       </template>
       
       <div class="actions-container">
-        <v-btn
+        <!-- <v-btn
           variant="flat"
           elevation="2"
           color="primary"
         >
           Prenota
-        </v-btn>
+        </v-btn> -->
       </div>
     </v-app-bar>
 
-    <v-main>
+    <v-main h-auto>
       <router-view/>
     </v-main>
 
@@ -52,9 +52,9 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 nav {
