@@ -31,26 +31,21 @@
         <v-col no-gutterslg="4" md="4" sm="12">
           <BookingSection>
           </BookingSection>
-          <DateTimeSelection
-            startHour="08:00"
-            endHour="20:00"
-            :intervalMinutes="30"
-          >
-          </DateTimeSelection>
         </v-col>
       </v-row>
+      <LocationSection></LocationSection>
     </v-container>
 </template>
 
 <script>
 import BookingSection from '@/components/BookingSection'
-import DateTimeSelection from '@/components/DateTimeSelection'
+import LocationSection from '@/components/LocationSection'
 
 export default {
   name: 'HomeView',
   components: {
-    DateTimeSelection,
-    BookingSection
+    BookingSection,
+    LocationSection
   }
 }
 </script>
